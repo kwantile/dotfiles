@@ -1,0 +1,1 @@
+/home/kwantile/dotfiles/.xinitrc

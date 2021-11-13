@@ -1,0 +1,50 @@
+Config { font            = "xft:Mononoki Nerd Font:weight=bold:pixelsize=12:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:Mononoki:pixelsize=11:antialias=true:hinting=true"
+                           , "xft:Font Awesome 5 Free Solid:pixelsize=12"
+                           , "xft:Font Awesome 5 Brands:pixelsize=12"
+                           ]
+       , bgColor      = "#282c34"
+       , fgColor      = "#ff6c6b"
+       -- Position TopSize and BottomSize take 3 arguments:
+       --   an alignment parameter (L/R/C) for Left, Right or Center.
+       --   an integer for the percentage width, so 100 would be 100%.
+       --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
+       --   NOTE: The height should be the same as the trayer (system tray) height.
+       , position       = TopSize L 100 24
+       , lowerOnStart = True
+       , hideOnStart  = False
+       , allDesktops  = True
+       , persistent   = True
+       , iconRoot     = ".xmonad/xpm/"  -- default: "."
+       , commands = [
+                        -- Cpu usage in percent
+                      Run Cpu ["-t", "CPU: <total>%","-H","50","--high","red"] 20
+                        -- Ram used number and percent
+                    , Run Memory ["-t", "MEM: <used>M (<usedratio>%)"] 20
+                        -- Echos a "battery" icon in front of the pacman updates.
+                    , Run Com "echo" ["<fn=2>\xf242</fn>"] "baticon" 36000
+                    , Run MultiCoreTemp ["-t", "TEMP: <avg>°C | <avgpc>%",
+                                         "-L", "60", "-H", "80",
+                                         "-l", "lightblue", "-n", "yellow", "-h", "red"] 50
+                        -- Battery
+                    , Run BatteryP ["BAT1"] ["-t", "<acstatus><watts> (<left>%)", 
+                                             "--",
+                                             "-O", "ON", "-o", "OFF", "-i", "IDLE"] 50
+                        -- Time and date
+                    , Run Date " %Y-%M %d %H:%M " "date" 50
+                    , Run Brightness ["-t", "BRIGHT: <percent>%", 
+                                      "--",
+                                      "-D", "/sys/class/backlight/intel_backlight"] 1
+                    , Run Volume "default" "Master" ["-t", "VOL: <volume>% <status>"] 1
+                        -- Script that dynamically adjusts xmobar padding depending on number of trayer icons.
+                    , Run Com "$HOME/.config/xmobar/scripts/trayer-padding-icon.sh" [] "trayerpad" 20
+                        -- Prints out the left side items such as workspaces, layout, etc.
+                    , Run Wireless "wlo1" ["-t", "WIFI: <quality>% (<ssid>)"] 60
+                    , Run Com "whoami" [] "user" 3600
+                    , Run Kbd [("ru", "RU"), ("us", "US")]
+                    , Run UnsafeStdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " <icon=haskell_20.xpm/> <fc=#666666>|</fc> %UnsafeStdinReader% }{ <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF><action=`termite -e bpytop`>%multicoretemp%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF><action=`termite -e bpytop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF><action=`alacritty -e htop`>%memory%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF>%bright%</fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF><action=`alacritty -e htop`>%default:Master%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF>%baticon% %battery%</fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF>%date%</fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF>%wlo1wi%</fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF>%kbd%</fc></box>  <box type=Bottom width=2 mb=2 color=#C7C7C7><fc=#EFEFEF>%user%</fc></box> "
+       }
